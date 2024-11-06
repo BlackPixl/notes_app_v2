@@ -1,0 +1,32 @@
+version: "3.7"
+
+services:
+
+#docker run -d --name ${IMAGE_NAME}_container -p 3000:3000 --network notesapp -e MYSQL_HOST=mysql -e MYSQL_USER=root -e MYSQL_PASSWORD=secret -e MYSQL_DB=todos ${IMAGE_NAME}:${IMAGE_TAG}
+  app:
+    image: notes-app:latest
+    ports:
+      - 3000:3000
+    environment:
+      MYSQL_HOST: mysql
+      MYSQL_USER: root
+      MYSQL_PASSWORD: secret
+      MYSQL_DB: todos
+    networks:
+      - notesapp
+
+# docker run -d --network notesapp --network-alias mysql -v /home/javier/data/notes-data/:/var/lib/mysql/ -e MYSQL_ROOT_PASSWORD=secret -e MYSQL_DATABASE=todos mysql:5.7
+
+  mysql:
+    image: mysql:5.7
+    volumes:
+      - /home/javier/data/notes-data:/var/lib/mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: secret
+      MYSQL_DATABASE: todos
+    networks:
+      - notesapp
+
+networks:
+  notesapp:
+    external: true
